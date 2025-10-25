@@ -1,0 +1,8 @@
+name: Blog
+slug: blog
+namespace: Modules\\Blog
+description: Simple blog module showcasing the Glugox modular workflow.
+providers:
+  - Modules\\Blog\\Providers\\BlogServiceProvider
+routes:
+  - routes/web.php

@@ -1,173 +1,85 @@
-# ![logo.svg](public/logo.svg) Cloud
+# Cloud Glugox Demo
 
+This Laravel skeleton has been extended to showcase the **Glugox modular ecosystem**. It demonstrates how modules can be described declaratively, scaffolded with a generator, and orchestrated inside a standard Laravel application.
 
-Build and deploy modular Laravel applications with ease.
+## Included packages
 
-### Glugox Modular Ecosystem
+### `glugox/module`
+- Defines the reusable `ModuleContract` and `AbstractModule` base class.
+- Modules receive their manifest metadata and may override `register()` / `boot()` hooks.
+- Route files and service providers are declared on the manifest and returned from the module instance.
 
-## Introduction
+### `glugox/module-generator`
+- Reads JSON or YAML specifications (see `resources/glugox/blog.json`).
+- Provides an Artisan command `glugox:module:generate` that scaffolds a module directory (manifest, module class, provider stub, routes).
+- Output is written to `modules/{StudlyName}` by default.
 
-The Glugox Modular Ecosystem enables building **large, modular Laravel applications** with minimal code in the main Laravel folder structure. It is composed of three tightly integrated packages:
+### `glugox/orchestrator`
+- Discovers manifests inside configured paths (default `modules/`).
+- Registers and boots enabled modules, including their service providers and routes.
+- Publishes configuration via `config/glugox.php` allowing modules to be enabled/disabled per slug.
 
-* **[`glugox/module`](https://github.com/glugox/module)** → defines contracts, abstractions, and base classes for modules.
-* **[`glugox/module-generator`](https://github.com/glugox/module-generator)** → scaffolds modules from JSON/YAML specifications.
-* **[`glugox/orchestrator`](https://github.com/glugox/orchestrator)** → manages modules (discovery, enable/disable, lifecycle) inside a Laravel application.
+## Demo workflow
 
-This ecosystem allows developers to focus on high-level specifications while the tooling handles scaffolding and orchestration.
+1. **Describe a module** using JSON or YAML.
+   ```json
+   {
+     "name": "Blog",
+     "slug": "blog",
+     "namespace": "Modules\\\\Blog",
+     "description": "Simple blog module showcasing the Glugox modular workflow.",
+     "providers": [
+       "Modules\\\\Blog\\\\Providers\\\\BlogServiceProvider"
+     ],
+     "routes": [
+       "routes/web.php"
+     ]
+   }
+   ```
+2. **Generate the module scaffold**
+   ```bash
+   php artisan glugox:module:generate resources/glugox/blog.json
+   ```
+   This creates `modules/Blog/` with:
+   - `module.json` manifest
+   - `src/BlogModule.php`
+   - `src/Providers/BlogServiceProvider.php`
+   - `routes/web.php`
 
----
+3. **Enable the module** via configuration.
+   ```php
+   // config/glugox.php
+   return [
+       'modules' => [
+           'enabled' => ['blog'],
+           'disabled' => [],
+       ],
+   ];
+   ```
 
-## Packages Overview
+4. **Boot the application.** The orchestrator service provider discovers enabled manifests, registers the Blog module, loads its provider, and wires the `/blog` route which renders the Inertia page located at `resources/js/Pages/Blog/Index.vue`.
 
-### 1. glugox/module (Foundation)
-
-* Defines contracts (`ModuleContract`, `HasRoutes`, `HasMigrations`, etc.).
-* Provides the `Module` base class.
-* Implements `ModuleManifest` for module metadata.
-* Ensures all modules are consistent and self-describing.
-
-### 2. glugox/module-generator (Factory)
-
-* Reads module specs (`/specs/*.json` or `.yaml`).
-* Generates fully structured modules under `/modules/{Vendor}/{Name}`.
-* Produces backend (models, migrations, routes) and frontend (Vue/Inertia) scaffolding.
-* Ensures compliance with `glugox/module` contracts.
-
-### 3. glugox/orchestrator (Conductor)
-
-* Discovers installed modules.
-* Loads their manifests and registers service providers.
-* Provides artisan commands to enable, disable, and list modules.
-* Controls module lifecycle at runtime.
-
----
-
-## Example Workflow
-
-1. **Define a Spec**
-
-```json
-{
-  "schemaVersion": "1.0.0",
-  "module": {
-    "id": "company/billing",
-    "name": "Billing",
-    "namespace": "Company\\Billing",
-    "description": "Invoices and payments",
-    "capabilities": ["http:web", "http:api"]
-  },
-  "models": [
-    {
-      "name": "Invoice",
-      "fields": [
-        { "name": "number", "type": "string" },
-        { "name": "amount", "type": "decimal" },
-        { "name": "status", "type": "enum:pending,paid,cancelled" }
-      ]
-    }
-  ]
-}
-```
-
-2. **Generate Module**
-
-```bash
-php artisan module:generate billing
-```
-
-3. **List Modules**
-
-```bash
-php artisan orchestrator:modules:list
-```
-
-4. **Enable Module**
-
-```bash
-php artisan orchestrator:modules:enable company/billing
-```
-
-5. **Run Application**
-
-* Orchestrator loads the Billing module.
-* Service provider, migrations, routes, and assets are available.
-
----
-
-## Directory Layout
+## Directory layout
 
 ```
-myapp/
-├── specs/
-│   ├── billing.json
-│   └── crm.json
-├── modules/
-│   ├── Company/
-│   │   └── Billing/
-│   └── Company/
-│       └── Crm/
-├── vendor/
-│   ├── glugox/module
-│   ├── glugox/module-generator
-│   └── glugox/orchestrator
-└── composer.json
+packages/
+├── glugox/module
+├── glugox/module-generator
+└── glugox/orchestrator
+modules/
+└── Blog/
+    ├── module.json
+    ├── routes/web.php
+    └── src/
+        ├── BlogModule.php
+        └── Providers/BlogServiceProvider.php
+resources/glugox/
+└── blog.json
 ```
 
----
+## Commands
 
-## Responsibilities
+- `php artisan glugox:module:generate <spec>` – scaffold a module from JSON/YAML.
+- `php artisan route:list` – verify routes registered by discovered modules (e.g. `/blog`).
 
-### For Module Developers
-
-* Extend `Module` class from `glugox/module`.
-* Provide routes, migrations, and service provider.
-* Follow manifest structure.
-
-### For Generator Developers
-
-* Maintain parsers and templates.
-* Ensure generator output strictly follows `glugox/module`.
-* Extend with frontend and testing scaffolds.
-
-### For Orchestrator Developers
-
-* Maintain discovery and lifecycle logic.
-* Implement artisan commands.
-* Ensure safe integration into Laravel boot cycle.
-
-### For Main App Developers
-
-* Write specs in `/specs`.
-* Generate modules with `module-generator`.
-* Use `orchestrator` commands to enable/disable modules.
-* Keep the main app minimal.
-
----
-
-## Benefits
-
-* **Separation of Concerns** → contracts, generation, and orchestration are independent.
-* **Consistency** → all modules follow the same structure.
-* **Scalability** → supports very large Laravel applications.
-* **Developer Velocity** → new features added rapidly via specs.
-
----
-
-## Next Steps
-
-* Provide demo app (`glugox/app-demo`).
-* Add CI/CD pipelines for regeneration and tests.
-* Extend generator for advanced cases (multi-tenancy, permissions).
-* Build admin dashboard for visual module management.
-
----
-
-## Summary
-
-The Glugox ecosystem standardizes how modules are **defined**, **generated**, and **managed** in Laravel:
-
-* `glugox/module`: the **foundation**.
-* `glugox/module-generator`: the **factory**.
-* `glugox/orchestrator`: the **conductor**.
-
-Together, they enable highly modular, reusable, and maintainable Laravel applications.
+Run the usual Laravel tooling (`php artisan serve`, `npm run dev`) to explore the demo module rendered through Inertia/Vue.
