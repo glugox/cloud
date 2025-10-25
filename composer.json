@@ -29,9 +29,15 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "Glugox\\Module\\": "packages/glugox/module/src/",
+            "Glugox\\ModuleGenerator\\": "packages/glugox/module-generator/src/",
+            "Glugox\\Orchestrator\\": "packages/glugox/orchestrator/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "classmap": [
+            "modules/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

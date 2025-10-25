@@ -1,0 +1,13 @@
+{
+    "name": "Blog",
+    "slug": "blog",
+    "namespace": "Modules\\Blog",
+    "description": "Simple blog module showcasing the Glugox modular workflow.",
+    "version": "1.0.0",
+    "providers": [
+        "Modules\\Blog\\Providers\\BlogServiceProvider"
+    ],
+    "routes": [
+        "routes/web.php"
+    ]
+}
