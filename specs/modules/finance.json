@@ -1,0 +1,54 @@
+{
+    "app": {
+        "disabled": false,
+        "name": "Finance",
+        "seedEnabled": true,
+        "seedCount": 10,
+        "fakerMappings": {
+            "invoice_number": "ean13",
+            "currency": "randomElement([\"USD\",\"EUR\",\"GBP\"])"
+        }
+    },
+    "entities": [
+        {
+            "name": "Invoice",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "invoice_number", "type": "string", "unique": true, "indexed": true },
+                { "name": "amount", "type": "decimal", "min": 0, "max": 100000, "sortable": true },
+                { "name": "currency", "type": "string" },
+                { "name": "issued_at", "type": "dateTime" },
+                { "name": "due_at", "type": "dateTime" },
+                { "name": "status", "type": "enum", "options": ["draft", "sent", "paid", "overdue"], "default": "draft" }
+            ],
+            "relations": [
+                { "type": "hasMany", "relatedEntityName": "Payment" }
+            ],
+            "filters": [
+                { "field": "invoice_number", "type": "text" },
+                { "field": "status", "type": "enum" },
+                { "field": "amount", "type": "range" },
+                { "field": "due_at", "type": "date_range" }
+            ],
+            "actions": [
+                { "name": "mark_paid", "label": "Mark as Paid", "type": "command", "command": "invoice:mark-paid" }
+            ]
+        },
+        {
+            "name": "Payment",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "method", "type": "enum", "options": ["credit_card", "bank_transfer", "paypal"] },
+                { "name": "amount", "type": "decimal" },
+                { "name": "paid_at", "type": "dateTime" }
+            ],
+            "relations": [
+                { "type": "belongsTo", "relatedEntityName": "Invoice" }
+            ],
+            "filters": [
+                { "field": "method", "type": "enum" },
+                { "field": "paid_at", "type": "date_range" }
+            ]
+        }
+    ]
+}

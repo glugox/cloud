@@ -1,0 +1,41 @@
+{
+    "app": {
+        "disabled": false,
+        "name": "KnowledgeBase",
+        "seedEnabled": true,
+        "seedCount": 8
+    },
+    "entities": [
+        {
+            "name": "Category",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "name", "type": "string", "unique": true }
+            ],
+            "relations": [
+                { "type": "hasMany", "relatedEntityName": "Article" }
+            ]
+        },
+        {
+            "name": "Article",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "title", "type": "string", "searchable": true, "sortable": true },
+                { "name": "content", "type": "text" },
+                { "name": "published", "type": "boolean", "default": false },
+                { "name": "published_at", "type": "dateTime", "nullable": true }
+            ],
+            "relations": [
+                { "type": "belongsTo", "relatedEntityName": "Category" }
+            ],
+            "filters": [
+                { "field": "title", "type": "text" },
+                { "field": "published", "type": "boolean" },
+                { "field": "published_at", "type": "date_range" }
+            ],
+            "actions": [
+                { "name": "publish", "label": "Publish", "type": "command", "command": "article:publish", "icon": "check-circle" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "app": {
+        "disabled": false,
+        "name": "Projects",
+        "seedEnabled": true,
+        "seedCount": 15
+    },
+    "entities": [
+        {
+            "name": "Project",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "title", "type": "string", "sortable": true },
+                { "name": "description", "type": "text", "nullable": true },
+                { "name": "status", "type": "enum", "options": ["planned", "in_progress", "completed"] },
+                { "name": "budget", "type": "decimal", "min": 0, "max": 100000 }
+            ],
+            "relations": [
+                { "type": "hasMany", "relatedEntityName": "Task" }
+            ],
+            "filters": [
+                { "field": "title", "type": "text" },
+                { "field": "status", "type": "enum" },
+                { "field": "budget", "type": "range" }
+            ],
+            "actions": [
+                { "name": "archive", "label": "Archive", "type": "command", "command": "project:archive" }
+            ]
+        },
+        {
+            "name": "Task",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "title", "type": "string" },
+                { "name": "priority", "type": "enum", "options": ["low", "medium", "high"], "default": "medium" },
+                { "name": "due_date", "type": "date" }
+            ],
+            "relations": [
+                { "type": "belongsTo", "relatedEntityName": "Project" }
+            ],
+            "filters": [
+                { "field": "priority", "type": "enum" },
+                { "field": "due_date", "type": "date_range" }
+            ]
+        }
+    ]
+}
