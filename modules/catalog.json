@@ -1,0 +1,39 @@
+{
+    "app": {
+        "name": "Catalog",
+        "seedEnabled": true,
+        "seedCount": 25,
+        "fakerMappings": {
+            "title": "sentence",
+            "price": "randomFloat(2, 5, 250)"
+        }
+    },
+    "entities": [
+        {
+            "name": "Product",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "title", "type": "string", "searchable": true, "sortable": true },
+                { "name": "description", "type": "text" },
+                { "name": "price", "type": "decimal", "min": 0 },
+                { "name": "stock", "type": "integer", "default": 0 }
+            ],
+            "filters": [
+                { "field": "price", "type": "range", "label": "Price Range", "min": 0, "max": 1000 }
+            ],
+            "actions": [
+                { "name": "discount", "label": "Apply Discount", "type": "command", "command": "catalog:discount" }
+            ]
+        },
+        {
+            "name": "Category",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "name", "type": "string", "unique": true }
+            ],
+            "relations": [
+                { "type": "belongsToMany", "relatedEntityName": "Product", "pivot": "category_product" }
+            ]
+        }
+    ]
+}

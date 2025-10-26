@@ -1,0 +1,37 @@
+{
+    "app": {
+        "name": "Orders",
+        "seedEnabled": false,
+        "seedCount": 0
+    },
+    "entities": [
+        {
+            "name": "Order",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "number", "type": "string", "unique": true },
+                { "name": "total", "type": "decimal", "min": 0 },
+                { "name": "placed_at", "type": "dateTime" }
+            ],
+            "relations": [
+                { "type": "belongsTo", "relatedEntityName": "User", "foreignKey": "user_id" },
+                { "type": "hasMany", "relatedEntityName": "OrderItem" }
+            ],
+            "filters": [
+                { "field": "placed_at", "type": "dateTime_range", "label": "Placed" }
+            ]
+        },
+        {
+            "name": "OrderItem",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "product_id", "type": "unsignedBigInteger", "indexed": true },
+                { "name": "quantity", "type": "integer", "min": 1 },
+                { "name": "price", "type": "decimal", "min": 0 }
+            ],
+            "relations": [
+                { "type": "belongsTo", "relatedEntityName": "Order", "foreignKey": "order_id" }
+            ]
+        }
+    ]
+}

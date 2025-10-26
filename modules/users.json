@@ -1,0 +1,35 @@
+{
+    "app": {
+        "name": "User Management",
+        "seedEnabled": true,
+        "seedCount": 10,
+        "fakerMappings": {
+            "name": "name",
+            "email": "unique()->safeEmail"
+        }
+    },
+    "entities": [
+        {
+            "name": "User",
+            "fields": [
+                { "name": "id", "type": "id" },
+                { "name": "name", "type": "string", "searchable": true },
+                { "name": "email", "type": "string", "unique": true, "indexed": true },
+                { "name": "password", "type": "password", "hidden": true },
+                { "name": "is_active", "type": "boolean", "default": true }
+            ],
+            "relations": [
+                { "type": "hasMany", "relatedEntityName": "Post", "as": "posts" }
+            ],
+            "settings": {
+                "primary": "email"
+            },
+            "filters": [
+                { "field": "is_active", "type": "boolean", "label": "Active" }
+            ],
+            "actions": [
+                { "name": "deactivate", "label": "Deactivate", "type": "command", "command": "users:deactivate" }
+            ]
+        }
+    ]
+}
