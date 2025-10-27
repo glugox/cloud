@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "glugox/crm": "@dev",
         "glugox/magic": "dev-main",
         "glugox/orchestrator": "^1.0",
         "inertiajs/inertia-laravel": "^2.0",
@@ -113,6 +114,13 @@
         {
             "type": "path",
             "url": "../orchestrator",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "/Users/ervin/Code/github.com/glugox/cloud/modules/glugox/crm",
             "options": {
                 "symlink": true
             }

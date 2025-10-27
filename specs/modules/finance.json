@@ -1,6 +1,6 @@
 {
     "app": {
-        "disabled": false,
+        "disabled": true,
         "name": "Finance",
         "seedEnabled": true,
         "seedCount": 10,

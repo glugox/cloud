@@ -1,6 +1,6 @@
 {
     "app": {
-        "disabled": false,
+        "disabled": true,
         "name": "Projects",
         "seedEnabled": true,
         "seedCount": 15

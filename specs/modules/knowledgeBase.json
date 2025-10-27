@@ -1,6 +1,6 @@
 {
     "app": {
-        "disabled": false,
+        "disabled": true,
         "name": "KnowledgeBase",
         "seedEnabled": true,
         "seedCount": 8

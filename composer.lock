@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e027bfbc0b73d76296967cc28e594305",
+    "content-hash": "152f6bbff89d570b2956f80be06d4b91",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -765,12 +765,43 @@
             "time": "2025-08-26T09:09:18+00:00"
         },
         {
+            "name": "glugox/crm",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/Users/ervin/Code/github.com/glugox/cloud/modules/glugox/crm",
+                "reference": "bbb102be6be5f1aed4c4e8df51837f6f91834b69"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Glugox\\Crm\\Providers\\MagicPackageServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Glugox\\Crm\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Glugox\\Crm\\Tests\\": "tests/"
+                }
+            },
+            "transport-options": {
+                "symlink": true,
+                "relative": false
+            }
+        },
+        {
             "name": "glugox/magic",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../magic",
-                "reference": "da9580a988bb3b846ae9434dcb70aef940c67187"
+                "reference": "88af10e487e9e3aef4079b249ef8ec5cec183078"
             },
             "require": {
                 "glugox/ai": "*",
@@ -1059,7 +1090,7 @@
             "dist": {
                 "type": "path",
                 "url": "../orchestrator",
-                "reference": "08cda6db2af709cd2ef4dd124fcd6db1ef57d66f"
+                "reference": "520fe470c351e69050756fa7fcd3e7b8eadf0725"
             },
             "require": {
                 "glugox/module": "^1.0",
@@ -10399,6 +10430,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "glugox/crm": 20,
         "glugox/magic": 20
     },
     "prefer-stable": true,
